@@ -1,0 +1,10 @@
+{
+  "name": "CampusCompass Pro · LPU Navigator",
+  "short_name": "CampusCompass",
+  "description": "A responsive campus navigation prototype for LPU.",
+  "start_url": "./index.html",
+  "display": "standalone",
+  "background_color": "#f3f6fb",
+  "theme_color": "#111a2e",
+  "icons": [{"src":"./icon.svg","sizes":"any","type":"image/svg+xml","purpose":"any maskable"}]
+}

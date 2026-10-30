@@ -1,0 +1,298 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<meta name="theme-color" content="#111827"><link rel="manifest" href="./manifest.webmanifest"><link rel="icon" href="./icon.svg" type="image/svg+xml"><meta name="description" content="CampusCompass helps LPU students find blocks and campus facilities.">
+<title>CampusCompass Pro · LPU Navigator</title>
+<link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css">
+<link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700&family=Space+Grotesk:wght@400;500;600;700&display=swap" rel="stylesheet">
+<style>
+:root{--ink:#111827;--muted:#667085;--line:#e7eaf0;--orange:#ff6b35;--green:#15966b;--paper:#f5f7fa;--blue:#3b82f6;--card:#fff}
+*{box-sizing:border-box}body{margin:0;background:var(--paper);color:var(--ink);font-family:"DM Sans",sans-serif}button,input,select{font:inherit}button{cursor:pointer}button:focus-visible,input:focus-visible,select:focus-visible{outline:3px solid #ff6b3560;outline-offset:2px}.top{height:72px;background:#fff;border-bottom:1px solid var(--line);display:flex;align-items:center;justify-content:space-between;padding:0 max(18px,calc((100vw - 1440px)/2));position:sticky;top:0;z-index:1000}.brand{display:flex;gap:11px;align-items:center;font:700 18px "Space Grotesk",sans-serif;letter-spacing:-.5px}.logo{height:40px;width:40px;border-radius:13px;background:var(--orange);color:white;display:grid;place-items:center;font-size:19px;box-shadow:0 7px 18px #ff6b3530}.brand small{display:block;font:700 9px "DM Sans";color:#8b94a4;letter-spacing:1.5px;margin-top:3px}.top-right{display:flex;align-items:center;gap:12px}.statuspill{display:flex;align-items:center;gap:7px;background:#eaf8f1;color:#147a57;border-radius:99px;padding:8px 11px;font-size:11px;font-weight:700}.pulse{width:7px;height:7px;border-radius:50%;background:#18a66c;box-shadow:0 0 0 4px #18a66c20}.toplink{border:1px solid var(--line);background:white;padding:9px 12px;border-radius:10px;font-size:12px;font-weight:700}.wrap{max-width:1440px;margin:auto;padding:0 24px}.hero{padding:35px 0 25px;display:flex;justify-content:space-between;align-items:end;gap:20px}.eyebrow{color:var(--orange);font-size:10px;font-weight:700;letter-spacing:2px;text-transform:uppercase}h1{font:700 clamp(34px,4vw,52px)/1.05 "Space Grotesk",sans-serif;letter-spacing:-2px;margin:12px 0 10px}.orange{color:var(--orange)}.hero p{margin:0;color:var(--muted);font-size:14px;line-height:1.7;max-width:650px}.hero-badge{padding:14px 16px;border:1px solid var(--line);background:#fff;border-radius:15px;max-width:290px;display:flex;gap:12px;align-items:center;font-size:12px;line-height:1.5}.hero-badge b{display:block}.hero-badge span{color:var(--muted)}.grid{display:grid;grid-template-columns:350px minmax(0,1fr);gap:17px;margin-bottom:22px;align-items:stretch}.panel{background:white;border:1px solid var(--line);border-radius:20px;box-shadow:0 8px 28px #10182706;overflow:hidden}.side{padding:20px}.section-title{font:700 18px "Space Grotesk",sans-serif;letter-spacing:-.5px;margin:0}.muted{font-size:12px;line-height:1.55;color:var(--muted)}.tabs{display:grid;grid-template-columns:1fr 1fr;gap:6px;padding:5px;background:#f2f4f7;border-radius:12px;margin:18px 0}.tab{border:0;background:transparent;padding:10px 6px;border-radius:9px;font-size:12px;font-weight:700;color:#667085}.tab.active{background:white;color:var(--ink);box-shadow:0 2px 5px #10182710}.label{font-size:10px;font-weight:700;letter-spacing:1px;text-transform:uppercase;color:#6b7280;display:block;margin:14px 0 7px}.select,.search{width:100%;border:1px solid var(--line);background:#fff;border-radius:11px;padding:12px 11px;font-size:13px;color:var(--ink)}.search{margin-bottom:8px}.btn{border:0;border-radius:11px;padding:12px 13px;font-size:12px;font-weight:700;display:flex;align-items:center;justify-content:center;gap:8px;transition:.18s}.btn:hover{transform:translateY(-1px)}.primary{background:var(--orange);color:white;box-shadow:0 7px 16px #ff6b3526}.dark{background:var(--ink);color:white}.outline{background:white;border:1px solid var(--line);color:var(--ink)}.full{width:100%;margin-top:9px}.btnrow{display:grid;grid-template-columns:1fr 1fr;gap:8px}.route-options{display:flex;gap:7px;margin:8px 0}.choice{flex:1;border:1px solid var(--line);border-radius:9px;background:white;padding:9px 5px;font-size:11px;font-weight:700;color:#667085}.choice.active{border-color:#ffb091;background:#fff2ec;color:#b74319}.metrics{display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-top:16px}.metric{padding:13px;background:#f7f8fa;border:1px solid #eef0f4;border-radius:12px}.metric span{display:block;font-size:9px;letter-spacing:.8px;font-weight:700;color:#778194}.metric strong{display:block;font:700 23px "Space Grotesk";margin-top:6px;letter-spacing:-1px}.metric small{font:500 10px "DM Sans";color:var(--muted);letter-spacing:0}.notice{padding:10px 11px;background:#f8fafc;border:1px solid #edf0f4;border-radius:10px;color:#6b7280;font-size:10px;line-height:1.5;margin-top:13px}.map-panel{min-height:625px;display:flex;flex-direction:column}.map-head{padding:16px 19px;border-bottom:1px solid var(--line);display:flex;justify-content:space-between;align-items:center;gap:12px}.map-head b{font:700 15px "Space Grotesk"}.map-head small{display:block;font-size:11px;color:var(--muted);margin-top:4px}.map-head-actions{display:flex;gap:7px}.iconbtn{height:36px;width:36px;border:1px solid var(--line);border-radius:10px;background:white;display:grid;place-items:center;font-size:16px}.mapbox{position:relative;flex:1;min-height:500px;background:#e8edf0}.mapbox #map{position:absolute;inset:0}.maptag{position:absolute;top:12px;left:12px;z-index:500;background:#ffffffef;border:1px solid #e8ebf0;border-radius:10px;padding:9px 11px;font-size:10px;box-shadow:0 5px 16px #10182712}.legend{position:absolute;bottom:14px;left:14px;z-index:500;display:flex;gap:12px;flex-wrap:wrap;padding:10px 12px;background:#fffffff0;border:1px solid var(--line);border-radius:11px;font-size:10px;color:#566173}.leg{display:flex;gap:6px;align-items:center}.dot{width:8px;height:8px;border-radius:50%;background:var(--green)}.dot.dest{background:var(--orange)}.undergrid{display:grid;grid-template-columns:1fr 1fr 1fr;gap:13px;margin:0 0 25px}.mini{background:#fff;border:1px solid var(--line);border-radius:16px;padding:18px;display:flex;gap:12px}.miniicon{width:40px;height:40px;display:grid;place-items:center;border-radius:12px;background:#fff0e9;font-size:19px;flex-shrink:0}.mini b{font:700 13px "Space Grotesk"}.mini p{font-size:11px;line-height:1.6;color:var(--muted);margin:6px 0 0}.modal{position:fixed;inset:0;background:#11182788;z-index:2000;display:none;align-items:center;justify-content:center;padding:16px}.modal.show{display:flex}.modalbox{background:white;border-radius:20px;padding:20px;width:min(460px,100%);max-height:90vh;overflow:auto}.modalhead{display:flex;justify-content:space-between;align-items:center;margin-bottom:12px}.modalhead h2{font:700 20px "Space Grotesk";margin:0}.qrstage{background:#f8fafc;border:1px dashed #d6dbe4;border-radius:14px;padding:15px;min-height:230px;display:grid;place-items:center;text-align:center}.qrstage video{width:100%;border-radius:10px}.qrstage canvas,.qrstage img{max-width:100%}.footer{border-top:1px solid var(--line);padding:20px 0 28px;display:flex;justify-content:space-between;gap:12px;color:#8b94a4;font-size:10px}.toast{position:fixed;bottom:22px;left:50%;transform:translate(-50%,20px);opacity:0;transition:.2s;pointer-events:none;z-index:3000;background:#111827;color:white;padding:12px 16px;border-radius:11px;font-size:12px;max-width:calc(100vw - 25px);box-shadow:0 10px 30px #0002}.toast.show{opacity:1;transform:translate(-50%,0)}.leaflet-popup-content-wrapper{border-radius:12px!important}.popupb{font:700 13px "Space Grotesk"}.popupsmall{font-size:11px;color:#667085;margin-top:4px}
+@media(max-width:1000px){.wrap{padding:0 16px}.top{padding:0 16px}.grid{grid-template-columns:310px minmax(0,1fr)}.side{padding:16px}.hero-badge{max-width:250px}.undergrid{grid-template-columns:1fr}.mini{padding:15px}}
+@media(max-width:700px){.top{height:64px;padding:0 13px}.brand{font-size:16px}.logo{width:36px;height:36px}.statuspill{font-size:9px;padding:7px 9px}.toplink{display:none}.wrap{padding:0 12px}.hero{padding:27px 0 19px;display:block}.hero-badge{margin-top:16px;max-width:none}.hero p{font-size:13px}h1{font-size:40px;letter-spacing:-1.8px}.grid{display:flex;flex-direction:column;gap:12px}.map-panel{order:1;min-height:0}.mapbox{height:45vh;min-height:320px;flex:none}.side{order:2;padding:17px}.map-head{padding:13px}.maptag{top:8px;left:8px}.legend{left:8px;bottom:8px}.undergrid{gap:9px}.footer{flex-direction:column;padding-bottom:28px}.metrics{gap:7px}.metric strong{font-size:21px}}
+
+/* CampusCompass Pro — polished visual pass */
+:root{
+  --ink:#111a2e;--muted:#66738a;--line:#e5eaf2;--orange:#ff6b35;
+  --green:#15966b;--paper:#f3f6fb;--blue:#4776e6;--card:#fff;
+}
+html{scroll-behavior:smooth}
+body{
+  background:
+    radial-gradient(ellipse at 8% 0%,rgba(255,107,53,.09),transparent 32rem),
+    radial-gradient(ellipse at 95% 12%,rgba(71,118,230,.09),transparent 30rem),
+    var(--paper);
+  color:var(--ink);
+}
+.top{
+  background:rgba(255,255,255,.88);
+  backdrop-filter:blur(18px);-webkit-backdrop-filter:blur(18px);
+  border-bottom:1px solid rgba(222,229,240,.85);
+  box-shadow:0 6px 28px rgba(17,26,46,.035);
+}
+.logo{
+  background:linear-gradient(145deg,#ff8b58,#f4511e);
+  box-shadow:0 9px 22px rgba(255,107,53,.3),inset 0 1px 0 rgba(255,255,255,.35);
+  font-size:21px;
+}
+.brand{letter-spacing:-.7px}
+.brand small{letter-spacing:1.65px}
+.statuspill{box-shadow:inset 0 0 0 1px rgba(21,150,107,.08)}
+.hero{padding-top:44px;padding-bottom:30px}
+.eyebrow{display:inline-flex;align-items:center;gap:9px}
+.eyebrow:before{content:"";display:inline-block;width:22px;height:2px;border-radius:4px;background:var(--orange)}
+h1{line-height:1.02;letter-spacing:-2.5px}
+.hero p{max-width:610px}
+.hero-badge{
+  border-color:rgba(255,255,255,.9);
+  background:linear-gradient(135deg,rgba(255,255,255,.96),rgba(248,250,255,.84));
+  box-shadow:0 12px 34px rgba(26,39,68,.07);
+  border-radius:18px;
+}
+.hero-badge>span:first-child{
+  width:45px;height:45px;display:grid;place-items:center;border-radius:14px;
+  background:linear-gradient(145deg,#fff0e8,#ffe0d2);color:#f05b28;
+}
+.panel{
+  border-color:rgba(223,229,239,.95);
+  box-shadow:0 12px 34px rgba(27,42,72,.055),0 2px 5px rgba(27,42,72,.025);
+  border-radius:22px;
+  transition:box-shadow .2s ease,border-color .2s ease;
+}
+.side{padding:22px;background:linear-gradient(180deg,#fff 0%,#fdfdff 100%)}
+.section-title{font-size:19px;letter-spacing:-.65px}
+.tabs{background:#f0f3f8;padding:5px;border:1px solid #edf0f6}
+.tab{transition:background .18s ease,color .18s ease,box-shadow .18s ease}
+.tab.active{box-shadow:0 3px 10px rgba(25,38,65,.09);color:#f05b28}
+.label{letter-spacing:1.15px;color:#758096}
+.select,.search{
+  border-color:#dfe5ef;border-radius:12px;background:#fbfcfe;
+  transition:border-color .18s ease,box-shadow .18s ease,background .18s ease;
+}
+.select:hover,.search:hover{border-color:#c5cfdf;background:#fff}
+.select:focus,.search:focus{border-color:#ff9b76;box-shadow:0 0 0 4px rgba(255,107,53,.10);outline:0;background:#fff}
+.btn{
+  min-height:43px;border-radius:12px;transition:transform .18s ease,box-shadow .18s ease,background .18s ease;
+}
+.btn:hover{transform:translateY(-2px)}
+.primary{
+  background:linear-gradient(135deg,#ff8754,#f45b27);
+  box-shadow:0 8px 18px rgba(255,107,53,.23),inset 0 1px 0 rgba(255,255,255,.28);
+}
+.primary:hover{box-shadow:0 11px 22px rgba(255,107,53,.3)}
+.dark{background:linear-gradient(135deg,#202c45,#111a2e);box-shadow:0 7px 17px rgba(17,26,46,.15)}
+.outline{border-color:#e0e6ef;background:linear-gradient(180deg,#fff,#fbfcff)}
+.outline:hover{border-color:#ffb99e;background:#fff8f4}
+.choice{transition:all .18s ease}
+.choice:hover{border-color:#ffb99e;color:#c44b22}
+.choice.active{border-color:#ffb18f;background:linear-gradient(135deg,#fff3ed,#fff8f5);color:#c64a20;box-shadow:inset 0 0 0 1px rgba(255,107,53,.05)}
+.metric{
+  background:linear-gradient(145deg,#f8faff,#f4f7fc);
+  border-color:#e8edf5;border-radius:14px;
+}
+.metric strong{color:#18233b}
+.metric span{letter-spacing:1px}
+.notice{background:linear-gradient(135deg,#f8fafc,#f5f7fb);border-color:#e8edf5;border-radius:12px}
+.map-panel{overflow:hidden}
+.map-head{background:linear-gradient(90deg,#fff,#fcfdff);padding:18px 20px}
+.map-head b{font-size:16px;letter-spacing:-.3px}
+.iconbtn{border-color:#e1e7f0;box-shadow:0 2px 5px rgba(22,35,61,.03);transition:all .18s ease}
+.iconbtn:hover{border-color:#ffb99e;background:#fff7f3;color:#e95726;transform:translateY(-1px)}
+.mapbox{background:#e8eef4}
+.maptag,.legend{
+  box-shadow:0 8px 24px rgba(24,38,65,.12);
+  backdrop-filter:blur(12px);-webkit-backdrop-filter:blur(12px);
+  border-color:rgba(224,230,239,.9);border-radius:12px;
+}
+.legend{gap:13px}
+.undergrid{gap:15px}
+.mini{
+  border-color:#e3e9f2;border-radius:18px;
+  box-shadow:0 8px 25px rgba(27,42,72,.035);
+  transition:transform .2s ease,box-shadow .2s ease,border-color .2s ease;
+}
+.mini:hover{transform:translateY(-3px);box-shadow:0 14px 30px rgba(27,42,72,.075);border-color:#ffd2c1}
+.miniicon{background:linear-gradient(145deg,#fff1e9,#ffe3d6);box-shadow:inset 0 1px 0 #fff}
+.mini b{font-size:14px;letter-spacing:-.2px}
+.footer{color:#8993a6}
+.modalbox{box-shadow:0 24px 80px rgba(9,18,36,.25);border:1px solid rgba(255,255,255,.6)}
+.toast{border:1px solid rgba(255,255,255,.12);box-shadow:0 14px 35px rgba(0,0,0,.22)}
+.leaflet-popup-content-wrapper{box-shadow:0 8px 24px rgba(18,31,55,.18)!important}
+.leaflet-control-zoom a{color:#18233b!important}
+@media(min-width:1001px){
+  .grid{grid-template-columns:365px minmax(0,1fr);gap:20px}
+  .map-panel{min-height:660px}
+  .mapbox{min-height:535px}
+}
+@media(max-width:700px){
+  .hero{padding-top:29px}
+  h1{font-size:clamp(36px,10vw,43px);letter-spacing:-2px}
+  .side{border-radius:20px}
+  .map-panel{border-radius:20px}
+  .map-head{padding:13px 14px}
+  .mapbox{height:47vh;min-height:320px}
+  .hero-badge{padding:13px}
+  .undergrid{margin-bottom:20px}
+}
+@media(prefers-reduced-motion:reduce){
+  *,*::before,*::after{scroll-behavior:auto!important;transition:none!important;animation:none!important}
+}
+
+
+/* Ultimate edition: five-screen responsive app shell */
+.desktop-nav{display:flex;align-items:center;gap:3px;margin-left:auto;margin-right:18px}
+.navitem{border:0;background:transparent;color:#738096;font-size:12px;font-weight:700;padding:10px 12px;border-radius:11px;display:flex;align-items:center;gap:7px;transition:.18s}
+.navitem:hover{background:#fff2ec;color:#c44b22}.navitem.active{background:#fff0e8;color:#df5625;box-shadow:inset 0 0 0 1px #ffe0d2}
+.mobile-nav{display:none}
+.saved-screen{padding:24px;margin-bottom:22px}.saved-head{display:flex;justify-content:space-between;align-items:center;gap:20px;margin-bottom:20px}.saved-count{border:1px solid #ffe1d4;background:linear-gradient(145deg,#fff4ed,#fff);border-radius:16px;padding:15px 20px;text-align:center;min-width:120px}.saved-count strong{display:block;font:700 28px 'Space Grotesk';color:#e65b2b}.saved-count span{font-size:9px;font-weight:700;letter-spacing:1px;color:#7d8798}.saved-grid{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:12px}.saved-card{border:1px solid #e6ebf3;border-radius:16px;padding:15px;background:linear-gradient(145deg,#fff,#fafbfe);display:flex;flex-direction:column;gap:9px}.saved-card .place-emoji{width:42px;height:42px;display:grid;place-items:center;border-radius:13px;background:#fff0e8;font-size:20px}.saved-card b{font:700 14px 'Space Grotesk'}.saved-card p{font-size:11px;color:#6b7689;line-height:1.5;margin:0;min-height:30px}.saved-card .card-actions{display:flex;gap:7px;margin-top:auto}.saved-card .btn{flex:1;padding:9px 6px;font-size:10px}.empty-saved{padding:28px;text-align:center;border:1px dashed #d9e0eb;border-radius:16px;color:#6b7689;grid-column:1/-1}.essentials{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:12px;margin-top:20px}.essentials>div{display:flex;gap:11px;padding:15px;border-radius:15px;background:#f7f9fc;border:1px solid #e9eef5}.essential-icon{display:grid;place-items:center;flex-shrink:0;width:34px;height:34px;border-radius:11px;background:#eaf8f1;color:#16825e;font-weight:800}.essentials b{font-size:12px}.essentials p{font-size:11px;color:#6b7689;line-height:1.55;margin:5px 0 0}
+@media(max-width:900px){.desktop-nav{gap:0;margin-right:8px}.desktop-nav .navitem{padding:9px 8px}.desktop-nav .navitem span{display:none}.saved-grid,.essentials{grid-template-columns:repeat(2,minmax(0,1fr))}}
+@media(max-width:700px){body{padding-bottom:74px}.desktop-nav{display:none}.mobile-nav{display:grid;grid-template-columns:repeat(5,1fr);position:fixed;bottom:0;left:0;right:0;z-index:1500;padding:7px 6px calc(7px + env(safe-area-inset-bottom));background:rgba(255,255,255,.94);backdrop-filter:blur(18px);border-top:1px solid #e5eaf2;box-shadow:0 -8px 25px #14213b0b}.mobile-nav .navitem{display:flex;flex-direction:column;gap:3px;justify-content:center;padding:7px 3px;border-radius:10px}.mobile-nav .navitem span{font-size:19px;line-height:1}.mobile-nav .navitem small{font-size:9px}.saved-screen{padding:16px}.saved-head{align-items:flex-start}.saved-count{min-width:84px;padding:10px}.saved-count strong{font-size:22px}.saved-grid,.essentials{grid-template-columns:1fr}.saved-card p{min-height:0}.statuspill{display:none}.top{justify-content:space-between}.hero{padding-top:24px}}
+
+</style>
+</head>
+<body>
+<header class="top">
+  <div class="brand"><div class="logo">⌖</div><div>Campus<span class="orange">Compass</span><small>LPU SMART CAMPUS NAVIGATOR</small></div></div>
+  <nav class="desktop-nav" aria-label="Main navigation"><button class="navitem active" data-screen="home">⌂ <span>Home</span></button><button class="navitem" data-screen="navigate">➤ <span>Navigate</span></button><button class="navitem" data-screen="explore">⌕ <span>Explore</span></button><button class="navitem" data-screen="scan">▦ <span>QR Scan</span></button><button class="navitem" data-screen="saved">♡ <span>Saved</span></button></nav><div class="top-right"><span class="statuspill"><i class="pulse"></i> READY TO EXPLORE</span></div>
+</header>
+<main class="wrap">
+  <section class="hero">
+    <div><div class="eyebrow">A smarter way around campus</div><h1>Find it. <span class="orange">Reach it.</span><br>Own your campus.</h1><p>Find academic blocks, libraries, food spots and campus facilities. Start with live GPS, choose your destination, then follow a mapped pedestrian route instead of a straight line through buildings.</p></div>
+    <div class="hero-badge"><span style="font-size:25px">✦</span><div><b>Built for the student journey</b><span>Search · GPS · walking routes · QR block identity</span></div></div>
+  </section>
+  <section class="grid">
+    <aside class="panel side">
+      <h2 class="section-title">Plan your journey</h2><p class="muted">Choose where you are starting and where you want to go.</p>
+      <div class="tabs"><button class="tab active" id="tabRoute">Route planner</button><button class="tab" id="tabPlaces">Explore places</button></div>
+      <div id="routeForm">
+        <label class="label" for="startSelect">Starting point</label>
+        <select id="startSelect" class="select"><option value="gps">◎ My live location (GPS)</option><option value="34">Block 34</option><option value="38">Block 38</option><option value="22">Block 22 (verify pin)</option><option value="28">Block 28</option><option value="37">Block 37 · Central Library</option><option value="55">Block 55 · verify pin</option><option value="56">Block 56 · verify pin</option></select>
+        <label class="label" for="destSelect">Destination</label>
+        <select id="destSelect" class="select"><option value="34">Block 34 · CSE Block</option><option value="38">Block 38</option><option value="22">Block 22 (verify pin)</option><option value="28">Block 28</option><option value="37">Block 37 · Central Library</option><option value="55">Block 55 · verify pin</option><option value="56">Block 56 · verify pin</option><option value="auditorium">Shanti Devi Mittal Auditorium</option><option value="cafe">Cafe Chokolade · campus</option><option value="campus">LPU Main Campus</option></select>
+        <label class="label">Route preference</label>
+        <div class="route-options"><button class="choice active" data-route="fast">Fastest walk</button><button class="choice" data-route="short">Shortest walk</button></div>
+        <div class="btnrow"><button class="btn primary" id="routeBtn">↗ Build route</button><button class="btn outline" id="gpsBtn">◎ Use GPS</button></div>
+        <div class="metrics"><div class="metric"><span>ROUTE DISTANCE</span><strong id="distMetric">— <small>km</small></strong></div><div class="metric"><span>EST. WALK TIME</span><strong id="timeMetric">— <small>min</small></strong></div></div>
+        <button class="btn dark full" id="openNavBtn">Open turn-by-turn navigation ↗</button>
+        <div class="btnrow"><button class="btn outline full" id="shareBtn">Copy route summary</button><button class="btn outline full" id="saveCurrentBtn">♡ Save place</button></div>
+      </div>
+      <div id="placesForm" style="display:none">
+        <label class="label" for="placeSearch">Search campus places</label><input class="search" id="placeSearch" placeholder="Try block, library, cafe, auditorium…">
+        <div id="placeResults"></div>
+        <p class="muted">Some facilities need their exact campus entrance pin confirmed. Select a result to set it as your destination.</p>
+      </div>
+      <div class="notice" id="status">Ready. Turn on GPS or choose a known campus point. Route estimates depend on available mapped paths.</div>
+      <div class="btnrow" style="margin-top:10px"><button class="btn outline" id="qrOpen">▦ Scan block QR</button><button class="btn outline" id="qrMake">＋ Create QR</button></div>
+      <p class="muted" style="font-size:10px;margin:11px 0 0">Privacy: GPS starts only after you tap a location button. Your coordinates are used in this browser for the map and route request.</p>
+    </aside>
+    <section class="panel map-panel">
+      <div class="map-head"><div><b>Campus map</b><small id="mapCaption">Choose a destination to start planning</small></div><div class="map-head-actions"><button class="iconbtn" id="fitBtn" title="Fit route">⤢</button><button class="iconbtn" id="plusBtn" title="Zoom in">＋</button><button class="iconbtn" id="minusBtn" title="Zoom out">−</button></div></div>
+      <div class="mapbox"><div id="map"></div><div class="maptag" id="mapTag">📍 Block markers are approximate where noted</div><div class="legend"><span class="leg"><i class="dot"></i> Your location</span><span class="leg"><i class="dot dest"></i> Destination</span><span class="leg">━ Walking path</span></div></div>
+    </section>
+  </section>
+  <section class="undergrid">
+    <article class="mini"><div class="miniicon">📍</div><div><b>Live location tracking</b><p>Follow your GPS position as it updates. Location accuracy depends on your device and surroundings.</p></div></article>
+    <article class="mini"><div class="miniicon">🧭</div><div><b>Real mapped paths</b><p>Walking routes use mapped pedestrian networks when the public routing service has coverage. If no route is found, the app will tell you rather than draw a fake line.</p></div></article>
+    <article class="mini"><div class="miniicon">▦</div><div><b>QR block identity</b><p>Scan a QR placed at a building to identify the block, show its details and plan a route from that block.</p></div></article>
+  </section>
+  <section id="savedScreen" class="panel saved-screen" hidden>
+    <div class="saved-head"><div><div class="eyebrow">Your campus shortcuts</div><h2 class="section-title" style="font-size:28px;margin-top:8px">Saved places & campus essentials</h2><p class="muted">Keep frequently used destinations close. Saved items stay in this browser on this device.</p></div><div class="saved-count"><strong id="savedCount">0</strong><span>SAVED PLACES</span></div></div>
+    <div id="savedPlaces" class="saved-grid"></div>
+    <div class="essentials"><div><span class="essential-icon">✚</span><div><b>Need help on campus?</b><p>For emergencies, contact campus security or the official LPU help desk. Add verified campus numbers here before your final presentation.</p></div></div><div><span class="essential-icon">♿</span><div><b>Accessible-route note</b><p>This prototype does not yet verify ramps, lifts, or step-free paths. Confirm accessibility with campus staff before relying on a route.</p></div></div><div><span class="essential-icon">✓</span><div><b>Pin verification</b><p>Block 22, 55 and 56 are looked up when requested because their exact pins are not confirmed in this prototype.</p></div></div></div>
+  </section>
+  <footer class="footer"><span><b style="color:#111827">CampusCompass Pro</b> · Design Thinking prototype</span><span>Map data © OpenStreetMap contributors · Verify pins before real use</span></footer>
+</main>
+<nav class="mobile-nav" aria-label="Mobile navigation"><button class="navitem active" data-screen="home"><span>⌂</span><small>Home</small></button><button class="navitem" data-screen="navigate"><span>➤</span><small>Navigate</small></button><button class="navitem" data-screen="explore"><span>⌕</span><small>Explore</small></button><button class="navitem" data-screen="scan"><span>▦</span><small>QR Scan</small></button><button class="navitem" data-screen="saved"><span>♡</span><small>Saved</small></button></nav>
+<div class="modal" id="qrModal"><div class="modalbox"><div class="modalhead"><h2 id="qrTitle">Scan a block QR</h2><button class="iconbtn" id="qrClose">✕</button></div><p class="muted" id="qrHelp">Scan a QR code posted at a campus block. Camera access requires permission and a secure (HTTPS) page.</p><div class="qrstage" id="qrStage"><div><div style="font-size:35px">▦</div><b>QR scanner</b><p class="muted">Tap Start camera, or enter the QR text below.</p></div></div><button class="btn primary full" id="cameraBtn">Start camera</button><label class="label" for="qrText">Or enter QR code text</label><input class="search" id="qrText" placeholder="Example: CAMPUSCOMPASS:BLOCK34"><button class="btn dark full" id="qrSubmit">Identify this block</button><div id="qrGenerate" style="display:none"><label class="label" for="qrSelect">Choose block to create QR for</label><select class="select" id="qrSelect"><option value="34">Block 34</option><option value="38">Block 38</option><option value="22">Block 22</option><option value="28">Block 28</option><option value="37">Block 37 / Central Library</option><option value="55">Block 55</option><option value="56">Block 56</option></select><div id="qrOutput" class="qrstage" style="margin-top:10px"></div><button class="btn outline full" id="qrDownload">Download QR image</button></div></div></div>
+<div class="toast" id="toast"></div>
+<script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/qrcodejs/1.0.0/qrcode.min.js"></script>
+<script src="https://unpkg.com/html5-qrcode@2.3.8/html5-qrcode.min.js"></script>
+<script>
+(() => {
+"use strict";
+const $=id=>document.getElementById(id);
+const places={
+ "34":{id:"34",name:"Block 34 · CSE Block",lat:31.25162,lng:75.70463,category:"Academic block",source:"Public map reference"},
+ "38":{id:"38",name:"Block 38",lat:31.25207,lng:75.70330,category:"Academic block",source:"Public map reference"},
+ "28":{id:"28",name:"Block 28",lat:31.25311,lng:75.70376,category:"Academic block",source:"Public map reference"},
+ "37":{id:"37",name:"Block 37 · Central Library",lat:31.25176,lng:75.70404,category:"Library",source:"Public map reference"},
+ "55":{id:"55",name:"Block 55",lat:null,lng:null,category:"Academic block",source:"Exact pin not verified — map lookup needed"},
+ "56":{id:"56",name:"Block 56",lat:null,lng:null,category:"Academic block",source:"Exact pin not verified — map lookup needed"},
+ "campus":{id:"campus",name:"LPU Main Campus",lat:31.2533614,lng:75.7035391,category:"University",source:"Public map reference"},
+ "auditorium":{id:"auditorium",name:"Shanti Devi Mittal Auditorium",lat:31.25262,lng:75.70375,category:"Auditorium",source:"Approximate nearby map pin — verify entrance"},
+ "cafe":{id:"cafe",name:"Cafe Chokolade · campus",lat:31.25788,lng:75.70804,category:"Cafe",source:"Public map reference"},
+ // Block 22 is deliberately geocoded live instead of inventing coordinates.
+ "22":{id:"22",name:"Block 22",lat:null,lng:null,category:"Academic block",source:"Exact pin not verified"}
+};
+let map,markers={},userMarker=null,accuracy=null,routeLayer=null,userPos=null,watchId=null,routeMode="fast",lastRoute=null,scanner=null,toastTimer=null,qrInstance=null;
+const destIcon=L.divIcon({className:"",html:'<div style="height:34px;width:34px;background:#ff6b35;border:3px solid white;border-radius:12px 12px 12px 3px;transform:rotate(-45deg);box-shadow:0 5px 15px #ff6b3545;display:grid;place-items:center"><b style="transform:rotate(45deg);color:white;font:700 11px DM Sans">●</b></div>',iconSize:[34,34],iconAnchor:[11,30]});
+const userIcon=L.divIcon({className:"",html:'<div style="height:19px;width:19px;border-radius:50%;background:#15966b;border:4px solid white;box-shadow:0 0 0 7px #15966b30,0 3px 9px #0003"></div>',iconSize:[19,19],iconAnchor:[9,9]});
+map=L.map("map",{zoomControl:false}).setView([31.2523,75.7040],17);
+L.tileLayer("https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png",{maxZoom:20,attribution:'&copy; <a href="https://www.openstreetmap.org/copyright" target="_blank" rel="noreferrer">OpenStreetMap</a> contributors'}).addTo(map);
+function popup(p){return `<div class="popupb">${p.name}</div><div class="popupsmall">${p.category} · ${p.source}</div><button onclick="window.ccSetDestination('${p.id}')" style="margin-top:8px;background:#ff6b35;color:white;border:0;border-radius:7px;padding:7px 10px;font-size:11px;font-weight:700">Route here ↗</button>`}
+function markerFor(p){if(!Number.isFinite(p.lat)||!Number.isFinite(p.lng))return;if(markers[p.id])map.removeLayer(markers[p.id]);markers[p.id]=L.marker([p.lat,p.lng],{icon:destIcon}).addTo(map).bindPopup(popup(p));}
+Object.values(places).forEach(markerFor);
+function toast(msg){const t=$("toast");t.textContent=msg;t.classList.add("show");clearTimeout(toastTimer);toastTimer=setTimeout(()=>t.classList.remove("show"),3800)}
+function status(msg){$("status").textContent=msg}
+function destination(){return places[$("destSelect").value]}
+function startPoint(){const v=$("startSelect").value;if(v==="gps")return userPos?{...userPos,name:"My live location",category:"Your location"}:null;return places[v]}
+function kmBetween(a,b){const r=6371,rad=x=>x*Math.PI/180,dlat=rad(b.lat-a.lat),dlon=rad(b.lng-a.lng),h=Math.sin(dlat/2)**2+Math.cos(rad(a.lat))*Math.cos(rad(b.lat))*Math.sin(dlon/2)**2;return r*2*Math.atan2(Math.sqrt(h),Math.sqrt(1-h))}
+function setMetrics(km,mins){$("distMetric").innerHTML=(km<1?Math.round(km*1000)+" <small>m</small>":km.toFixed(2)+" <small>km</small>");$("timeMetric").innerHTML=Math.max(1,Math.round(mins))+' <small>min</small>'}
+function clearRoute(){if(routeLayer){map.removeLayer(routeLayer);routeLayer=null}lastRoute=null;setMetrics(NaN,NaN);$("distMetric").innerHTML='— <small>km</small>';$("timeMetric").innerHTML='— <small>min</small>'}
+function routeCoordsShape(shape){const precision=1e6,coords=[];let index=0,lat=0,lng=0;function val(){let result=0,shift=0,b;do{b=shape.charCodeAt(index++)-63;result|=(b&0x1f)<<shift;shift+=5}while(b>=0x20);return(result&1)?~(result>>1):(result>>1)}while(index<shape.length){lat+=val();lng+=val();coords.push([lat/precision,lng/precision])}return coords}
+async function resolvePlace(id){const p=places[id];if(!p)return null;if(Number.isFinite(p.lat)&&Number.isFinite(p.lng))return p;status(`Looking up ${p.name} on the map…`);try{const q=encodeURIComponent(`${p.name} Lovely Professional University Phagwara Punjab India`);const r=await fetch("https://nominatim.openstreetmap.org/search?format=jsonv2&limit=5&q="+q,{headers:{"Accept-Language":"en"}});const d=await r.json();if(d.length){const exact=d.find(x=>new RegExp(`block.?${id}\\b`,"i").test(x.display_name))||d.find(x=>/lovely professional university/i.test(x.display_name))||d[0];p.lat=Number(exact.lat);p.lng=Number(exact.lon);p.source="Map search result — verify exact entrance";markerFor(p);return p}}catch(e){console.warn("Map lookup failed",e)}return null}
+async function resolveBlock22(){return resolvePlace("22")}
+async function buildRoute(){let from=startPoint(),to=destination();if(!from){toast("Turn on GPS first or choose a starting block.");return}if(!Number.isFinite(to.lat)||!Number.isFinite(to.lng)){to=await resolvePlace(to.id);if(!to){status(`Could not verify ${destination().name} pin. Confirm its entrance with LPU or map search.`);toast("Destination pin not found reliably. No route was drawn.");return}}if(!Number.isFinite(to.lat)||!Number.isFinite(to.lng)){toast("Destination coordinates are not verified yet.");return}if(!Number.isFinite(from.lat)||!Number.isFinite(from.lng)){from=await resolvePlace(from.id);if(!from){toast("Could not verify starting block pin.");return}}
+$("routeBtn").textContent="Finding path…";$("routeBtn").disabled=true;clearRoute();status("Finding a pedestrian route on mapped paths…");
+try{
+ const body={locations:[{lat:from.lat,lon:from.lng},{lat:to.lat,lon:to.lng}],costing:"pedestrian",units:"kilometers",shape_format:"polyline6",alternates:0};
+ if(routeMode==="short")body.costing_options={pedestrian:{shortest:true}};
+ const url="https://valhalla1.openstreetmap.de/route?json="+encodeURIComponent(JSON.stringify(body));
+ const res=await fetch(url);if(!res.ok)throw Error("Routing service returned "+res.status);const data=await res.json();if(!data.trip||!data.trip.legs||!data.trip.legs.length)throw Error("No walking route was returned.");
+ const leg=data.trip.legs[0],coords=routeCoordsShape(leg.shape);if(coords.length<2)throw Error("Route geometry was missing.");
+ routeLayer=L.polyline(coords,{color:"#ff6b35",weight:6,opacity:.92,lineCap:"round",lineJoin:"round"}).addTo(map);
+ const summary=data.trip.summary||leg.summary||{},km=Number(summary.length)||kmBetween(from,to),mins=(Number(summary.time)||km/4.5*3600)/60;
+ setMetrics(km,mins);lastRoute={from,to,km,mins,coords};map.fitBounds(routeLayer.getBounds().pad(.18));$("mapCaption").textContent=from.name+" → "+to.name;$("mapTag").textContent=routeMode==="short"?"Shortest available mapped walk":"Fastest available mapped walk";status(`Route found: ${km.toFixed(2)} km · about ${Math.round(mins)} min. Follow mapped paths and local signs.`);toast("Walking route found.");
+}catch(e){console.error(e);const straight=kmBetween(from,to);setMetrics(straight,straight/4.5*60);status("No mapped pedestrian route could be retrieved right now. The numbers shown are straight-line distance and a rough walking estimate only. Try Google Maps walking directions.");toast("Pedestrian route unavailable. No fake route drawn.");lastRoute={from,to,km:straight,mins:straight/4.5*60,coords:null};}
+finally{$("routeBtn").textContent="↗ Build route";$("routeBtn").disabled=false}}
+function googleDirections(){const to=destination();if(!Number.isFinite(to.lat)||!Number.isFinite(to.lng)){window.open("https://www.google.com/maps/search/?api=1&query="+encodeURIComponent(to.name+" Lovely Professional University Phagwara"),"_blank","noopener");return}const origin=startPoint();let url="https://www.google.com/maps/dir/?api=1&destination="+encodeURIComponent(to.lat+","+to.lng)+"&travelmode=walking";if(origin)url+="&origin="+encodeURIComponent(origin.lat+","+origin.lng);window.open(url,"_blank","noopener,noreferrer")}
+function useGPS(){if(!navigator.geolocation){toast("Your browser does not support GPS.");return}if(!window.isSecureContext)toast("GPS needs HTTPS or localhost. Use Live Server or a published HTTPS link.");status("Requesting location permission…");navigator.geolocation.getCurrentPosition(onPosition,onGeoError,{enableHighAccuracy:true,timeout:16000,maximumAge:3000});if(watchId===null)watchId=navigator.geolocation.watchPosition(onPosition,onGeoError,{enableHighAccuracy:true,timeout:20000,maximumAge:2500})}
+function onPosition(pos){userPos={lat:pos.coords.latitude,lng:pos.coords.longitude,name:"My live location",id:"gps",category:"Your location"};if(!userMarker)userMarker=L.marker([userPos.lat,userPos.lng],{icon:userIcon}).addTo(map).bindPopup('<div class="popupb">You are here</div><div class="popupsmall">Live GPS location</div>');else userMarker.setLatLng([userPos.lat,userPos.lng]);if(accuracy)map.removeLayer(accuracy);accuracy=L.circle([userPos.lat,userPos.lng],{radius:Math.min(pos.coords.accuracy||25,100),color:"#15966b",weight:1,fillOpacity:.08}).addTo(map);if($("startSelect").value==="gps"){const to=destination();if(Number.isFinite(to.lat)){const km=kmBetween(userPos,to);setMetrics(km,km/4.5*60)}}status("GPS active · accuracy about "+Math.round(pos.coords.accuracy||0)+" m. Tap Build route to refresh the pedestrian path.");$("mapTag").textContent="🟢 Live GPS active";if(!lastRoute)map.setView([userPos.lat,userPos.lng],18)}
+function onGeoError(e){const msg=e.code===1?"Location permission denied. Allow location in browser settings.":e.code===2?"Your location could not be determined. Try outdoors.":"GPS timed out. Try again.";status(msg);toast(msg)}
+function setDestination(id){if(!places[id])return;$("destSelect").value=id;$("tabRoute").click();const p=places[id];if(Number.isFinite(p.lat))map.setView([p.lat,p.lng],18);if(id==="22")resolveBlock22();status(p.name+" selected. Choose Build route to plan your walk.");}
+window.ccSetDestination=setDestination;
+$("routeBtn").addEventListener("click",buildRoute);$("gpsBtn").addEventListener("click",()=>{ $("startSelect").value="gps";useGPS()});$("openNavBtn").addEventListener("click",googleDirections);$("fitBtn").addEventListener("click",()=>{if(routeLayer)map.fitBounds(routeLayer.getBounds().pad(.18));else map.fitBounds(Object.values(markers).filter(Boolean).map(m=>m.getLatLng()))});$("plusBtn").addEventListener("click",()=>map.zoomIn());$("minusBtn").addEventListener("click",()=>map.zoomOut());
+document.querySelectorAll("[data-route]").forEach(b=>b.addEventListener("click",()=>{document.querySelectorAll("[data-route]").forEach(x=>x.classList.toggle("active",x===b));routeMode=b.dataset.route;status(routeMode==="short"?"Shortest route preference selected.":"Fastest walking route preference selected.")}));
+$("tabRoute").addEventListener("click",()=>{$("tabRoute").classList.add("active");$("tabPlaces").classList.remove("active");$("routeForm").style.display="block";$("placesForm").style.display="none"});
+$("tabPlaces").addEventListener("click",()=>{$("tabPlaces").classList.add("active");$("tabRoute").classList.remove("active");$("routeForm").style.display="none";$("placesForm").style.display="block";renderPlaces("")});
+function renderPlaces(q){const items=Object.values(places).filter(p=>(p.name+" "+p.category).toLowerCase().includes(q.toLowerCase()));$("placeResults").innerHTML=items.map(p=>`<button class="btn outline full" style="justify-content:space-between;text-align:left" onclick="window.ccSetDestination('${p.id}')"><span>${p.name}<small style="display:block;font-size:10px;color:#667085;margin-top:4px">${p.category} · ${p.source}</small></span><span>↗</span></button>`).join("")||'<p class="muted">No matching saved places. Try a block number or common facility.</p>'}
+$("placeSearch").addEventListener("input",e=>renderPlaces(e.target.value));
+$("shareBtn").addEventListener("click",async()=>{if(!lastRoute){toast("Build a route first.");return}const s=`CampusCompass route: ${lastRoute.from.name} to ${lastRoute.to.name}. ${lastRoute.km.toFixed(2)} km, about ${Math.round(lastRoute.mins)} minutes walking. ${lastRoute.coords?"Mapped pedestrian route available.":"Route geometry unavailable; distance is straight-line only."}`;try{await navigator.clipboard.writeText(s);toast("Route summary copied.")}catch(e){toast(s)}});
+function modal(mode){$("qrModal").classList.add("show");$("qrGenerate").style.display=mode==="make"?"block":"none";$("cameraBtn").style.display=mode==="make"?"none":"flex";$("qrText").style.display=mode==="make"?"none":"block";$("qrSubmit").style.display=mode==="make"?"none":"flex";$("qrTitle").textContent=mode==="make"?"Create a block QR":"Scan a block QR";$("qrHelp").textContent=mode==="make"?"Generate a QR code you can print and place on a project demo poster.":"Scan a QR code posted at a campus block. Camera access needs permission and HTTPS.";if(mode==="make")generateQR()}
+function openModal(mode){modal(mode)}
+$("qrOpen").addEventListener("click",()=>openModal("scan"));if($("qrOpenTop"))$("qrOpenTop").addEventListener("click",()=>openModal("scan"));$("qrMake").addEventListener("click",()=>openModal("make"));$("qrClose").addEventListener("click",closeModal);$("qrModal").addEventListener("click",e=>{if(e.target===$("qrModal"))closeModal()});
+function closeModal(){if(scanner){scanner.stop().catch(()=>{});scanner.clear();scanner=null}$("qrModal").classList.remove("show")}
+function identifyQR(raw){let s=(raw||"").trim(),id=null;const m=s.match(/(?:CAMPUSCOMPASS:|BLOCK[-_ ]?)(22|28|34|37|38|55|56)/i);if(m)id=m[1];else{try{const u=new URL(s);id=u.searchParams.get("block")}catch(e){}}if(!id&&/^(22|28|34|37|38|55|56)$/.test(s))id=s;if(!id){toast("QR text not recognized. Use a CampusCompass block QR.");return}closeModal();$("startSelect").value=id;const p=places[id];$("destSelect").value=id;status(`QR identified ${p.name}. You are marked at this block for your next route. Choose a destination to continue.`);$("mapCaption").textContent="QR location: "+p.name;if(Number.isFinite(p.lat)&&Number.isFinite(p.lng))map.setView([p.lat,p.lng],18);else resolvePlace(id);toast("Identified "+p.name+". Choose your next destination.");}
+$("qrSubmit").addEventListener("click",()=>identifyQR($("qrText").value));
+$("cameraBtn").addEventListener("click",async()=>{if(!window.Html5Qrcode){toast("QR scanner library did not load. Enter the QR text manually.");return}if(!scanner){scanner=new Html5Qrcode("qrStage")}try{const cameras=await Html5Qrcode.getCameras();if(!cameras.length)throw Error("No camera found");$("qrStage").innerHTML='<div id="reader" style="width:100%"></div>';scanner=new Html5Qrcode("reader");await scanner.start({facingMode:"environment"},{fps:10,qrbox:{width:230,height:230}},text=>identifyQR(text),()=>{});$("cameraBtn").textContent="Camera scanning…"}catch(e){toast("Could not start camera. Check permissions and use HTTPS.");console.error(e)}});
+function generateQR(){const id=$("qrSelect").value;$("qrOutput").innerHTML="";if(!window.QRCode){$("qrOutput").textContent="QR library did not load. Connect to the internet and reopen.";return}qrInstance=new QRCode($("qrOutput"),{text:"CAMPUSCOMPASS:BLOCK"+id,width:200,height:200,colorDark:"#111827",colorLight:"#ffffff",correctLevel:QRCode.CorrectLevel.H});$("qrOutput").insertAdjacentHTML("beforeend",`<p class="muted" style="grid-column:1/-1">QR identity: CAMPUSCOMPASS:BLOCK${id}</p>`)}
+$("qrSelect").addEventListener("change",generateQR);$("qrDownload").addEventListener("click",()=>{const root=$("qrOutput"),img=root.querySelector("img"),canvas=root.querySelector("canvas");const url=img?img.src:canvas?canvas.toDataURL("image/png"):null;if(!url){toast("Create the QR first.");return}const a=document.createElement("a");a.href=url;a.download="CampusCompass-Block-"+$("qrSelect").value+"-QR.png";a.click()});
+
+// Five coordinated interfaces: Home, Navigate, Explore, QR Scan, and Saved.
+const savedKey="campuscompass_saved_places_v1";
+function getSaved(){try{return JSON.parse(localStorage.getItem(savedKey)||"[]").filter(id=>places[id])}catch(e){return []}}
+function saveIds(ids){try{localStorage.setItem(savedKey,JSON.stringify([...new Set(ids)].filter(id=>places[id])))}catch(e){toast("Browser storage unavailable; saved list is temporary.")}}
+function savePlace(id){if(!places[id])return;const ids=getSaved();if(ids.includes(id)){toast("Already in your saved places.");return}ids.push(id);saveIds(ids);renderSaved();toast(places[id].name+" saved.")}
+function unsavePlace(id){saveIds(getSaved().filter(x=>x!==id));renderSaved();toast("Removed from saved places.")}
+function renderSaved(){const ids=getSaved();$("savedCount").textContent=ids.length;$("savedPlaces").innerHTML=ids.length?ids.map(id=>{const p=places[id];const emoji=p.category==="Library"?"📚":p.category==="Cafe"?"☕":p.category==="Auditorium"?"🎭":"🏢";return `<article class="saved-card"><div class="place-emoji">${emoji}</div><b>${p.name}</b><p>${p.category} · ${p.source}</p><div class="card-actions"><button class="btn primary" onclick="window.ccSetDestination('${id}');window.ccScreen('navigate')">Route</button><button class="btn outline" onclick="window.ccUnsave('${id}')">Remove</button></div></article>`}).join(""):'<div class="empty-saved"><div style="font-size:30px;margin-bottom:8px">♡</div><b>No saved places yet</b><p class="muted">Use “Save place” in the route planner to build your personal shortcuts.</p></div>'}
+function showScreen(screen){document.querySelectorAll("[data-screen]").forEach(b=>b.classList.toggle("active",b.dataset.screen===screen));const mainSections=[...document.querySelectorAll("main.wrap > section:not(#savedScreen)")];const saved=$("savedScreen");if(screen==="saved"){mainSections.forEach(sec=>sec.hidden=true);saved.hidden=false;renderSaved();saved.scrollIntoView({behavior:"smooth",block:"start"});return}saved.hidden=true;mainSections.forEach(sec=>sec.hidden=false);if(screen==="navigate"){document.querySelector(".grid").scrollIntoView({behavior:"smooth",block:"start"});setTimeout(()=>map.invalidateSize(),250)}else if(screen==="explore"){$("tabPlaces").click();document.querySelector(".grid").scrollIntoView({behavior:"smooth",block:"start"});setTimeout(()=>$("placeSearch").focus(),250)}else if(screen==="scan"){openModal("scan")}else{window.scrollTo({top:0,behavior:"smooth"});setTimeout(()=>map.invalidateSize(),250)}}
+window.ccScreen=showScreen;window.ccUnsave=unsavePlace;document.querySelectorAll("[data-screen]").forEach(b=>b.addEventListener("click",()=>showScreen(b.dataset.screen)));
+$("saveCurrentBtn").addEventListener("click",()=>savePlace(destination().id));
+renderPlaces("");setTimeout(()=>map.invalidateSize(),300);
+if("serviceWorker" in navigator && location.protocol!=="file:"){navigator.serviceWorker.register("./sw.js").catch(err=>console.warn("Offline shell not registered",err));}
+})();
+</script>
+</body>
+</html>
